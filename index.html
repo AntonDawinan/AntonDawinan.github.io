@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prelim Grade Calculator</title>
+    <title>Prelim Calculator</title>
     <style>
         body {
             font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
@@ -83,10 +83,10 @@
 <body>
     <div class="container">
         <h1>Dawinan</h1>
-        <h2>Prelim Grade Calculator</h2>
+        <h2>Prelim Calculator</h2>
         <form id="gradeForm">
-            <label for="prelim_exam">Prelim Exam (20%):</label>
-            <input type="number" id="prelim_exam" name="prelim_exam" step="0.01" min="0" max="100" required>
+            <label for="prelim_exam">Prelim Grade (20%):</label>
+            <input type="number" id="prelim_grade" name="prelim_grade" step="0.01" min="0" max="100" required>
 
             <button type="submit">Calculate Required Grades</button>
         </form>
@@ -113,10 +113,10 @@
             event.preventDefault()
 
             # Get the Prelim Exam grade
-            prelim_exam = float(Element("prelim_exam").element.value)
+            prelim_grade = float(Element("prelim_grade").element.value)
 
             # Calculate the Prelim grade (since it's 20% of the total)
-            prelim_grade = prelim_exam
+            prelim_grade = prelim_grade
 
             # Calculate how much grade is needed from Midterm (30%) and Final (50%) combined
             remaining_grade_needed = PASSING_GRADE - (prelim_grade * 0.2)
