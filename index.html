@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prelim Grade Calculator</title>
+    <style>
+        body {
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            background-color: #dbdbdb;
+            margin: 0;
+            padding: 50px;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: rgb(245, 243, 243);
+            border-radius: 10px;
+            box-shadow: 0px 0px 15px rgba(13, 13, 13, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #000000;
+        }
+
+        h2 {
+            text-align: center;
+            color: #000000;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        input {
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        button {
+            padding: 10px;
+            font-size: 15px;
+            background-color: #00b35a;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        }
+
+        button:hover {
+            background-color: #00954a;
+        }
+
+        .result {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .info {
+            font-size: 16px;
+            font-weight: bold;
+        }
+    </style>
+
+    <!-- PyScript CSS and JS -->
+    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+
+</head>
+<body>
+    <div class="container">
+        <h1>Dawinan</h1>
+        <h2>Prelim Grade Calculator</h2>
+        <form id="gradeForm">
+            <label for="prelim_exam">Prelim Exam (20%):</label>
+            <input type="number" id="prelim_exam" name="prelim_exam" step="0.01" min="0" max="100" required>
+
+            <button type="submit">Calculate Required Grades</button>
+        </form>
+
+        <div id="result" class="result" style="display:none;">
+            <h2 class="info">Your Prelim Grade is: <span id="prelimGrade"></span></h2>
+            <h2 class="info">Required Midterm Grade: <span id="requiredMidterm"></span></h2>
+            <h2 class="info">Required Final Grade: <span id="requiredFinal"></span></h2>
+            <p id="passMessage" class="info"></p>
+            <p id="deansListMessage" class="info"></p>
+        </div>
+    </div>
+
+    <!-- PyScript logic for the grade calculator -->
+    <py-script>
+        from pyscript import Element
+
+        # Constants for passing and Dean's List criteria
+        PASSING_GRADE = 75
+        DEANS_LIST_CRITERIA = 90
+
+        def calculate_grades(event):
+            # Prevent form from submitting
+            event.preventDefault()
+
+            # Get the Prelim Exam grade
+            prelim_exam = float(Element("prelim_exam").element.value)
+
+            # Calculate the Prelim grade (since it's 20% of the total)
+            prelim_grade = prelim_exam
+
+            # Calculate how much grade is needed from Midterm (30%) and Final (50%) combined
+            remaining_grade_needed = PASSING_GRADE - (prelim_grade * 0.2)
+            required_midterm_final = remaining_grade_needed / (0.3 + 0.5)
+
+            # Calculate required midterm and final grades for passing
+            required_midterm = required_midterm_final * 0.3
+            required_final = required_midterm_final * 0.5
+
+            # Dean's Lister calculation
+            remaining_grade_needed_deans = DEANS_LIST_CRITERIA - (prelim_grade * 0.2)
+            required_midterm_final_deans = remaining_grade_needed_deans / (0.3 + 0.5)
+            required_midterm_deans = required_midterm_final_deans * 0.3
+            required_final_deans = required_midterm_final_deans * 0.5
+
+            # Check if it's possible to pass
+            if required_midterm_final <= 100:
+                pass_message = "You have a chance to pass!"
+            else:
+                pass_message = "It is difficult to pass."
+
+            # Check if it's possible to be a Dean's Lister
+            if required_midterm_final_deans <= 100:
+                deans_list_message = f"To be a Dean’s Lister, you need at least {required_midterm_deans:.2f}% in the Midterm and {required_final_deans:.2f}% in the Finals."
+            else:
+                deans_list_message = "It is difficult to achieve the Dean’s Lister status."
+
+            # Update the result in the UI
+            Element("prelimGrade").element.innerHTML = f"{prelim_grade:.2f}"
+            Element("requiredMidterm").element.innerHTML = f"{required_midterm:.2f}"
+            Element("requiredFinal").element.innerHTML = f"{required_final:.2f}"
+            Element("passMessage").element.innerHTML = pass_message
+            Element("deansListMessage").element.innerHTML = deans_list_message
+            Element("result").element.style.display = "block"
+
+        # Bind the calculate_grades function to the form submission event
+        Element("gradeForm").element.onsubmit = calculate_grades
+    </py-script>
+</body>
+</html>
